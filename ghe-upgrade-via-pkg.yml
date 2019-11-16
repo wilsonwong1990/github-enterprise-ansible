@@ -67,7 +67,7 @@
       token: "{{ slacktoken }}"
       color: danger
       parse: full
-      msg: "Host: {{ inventory_hostname }}\nMaintenance mode:```{{ ghemaintover.stdout_lines }}```"
+      msg: "Host: {{ inventory_hostname }}\nMaintenance mode:```{{ ghemaintover.stdout }}```"
     delegate_to: 127.0.0.1
     when: ('primary' in group_names)
 
@@ -83,7 +83,7 @@
       token: "{{ slacktoken }}"
       color: danger
       parse: full
-      msg: "Host: {{ inventory_hostname }}\nReplication status:```{{ replicationstatus.stdout_lines }}```"
+      msg: "Host: {{ inventory_hostname }}\nReplication status:```{{ replicationstatus.stdout }}```"
     delegate_to: 127.0.0.1
     when: ('replicas' in group_names)
 
@@ -96,4 +96,4 @@
       token: "{{ slacktoken }}"
       color: danger
       parse: full
-      msg: "Host: {{ inventory_hostname }}\nGHES version: ```{{ gheversion.stdout_lines }}```"
+      msg: "Host: {{ inventory_hostname }}\nGHES version: ```{{ gheversion.stdout }}```"
