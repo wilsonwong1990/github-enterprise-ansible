@@ -5,7 +5,7 @@
 
   tasks:
   - name: Get slack token vault
-    include_vars: /ansible-playbooks/vault/slack-token.yml
+    include_vars: /github-enterprise-ansible/vault/slack-token.yml
 
   - name: Put Primary in maintenance mode
     shell: ghe-maintenance -s && ghe-maintenance -q
