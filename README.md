@@ -38,11 +38,18 @@ You may edit the `pause` tasks depending on how long it will take for the applia
 Run the playbook with like the following:
 
 ```
-ansible-playbook ghe-upgrade-via-pkg.yml -i /path-to-folder/inventory/ghes --private-key /path/to/private/key -u admin -e GHES_package_url=<LINK TO UPGRADE PKG> --vault-password-file=<SOMEPASSWORD> 
+ansible-playbook ghe-upgrade-via-pkg.yml -i inventory/ghes --private-key /path/to/private/key -u admin -e GHES_package_url=<LINK TO UPGRADE PKG> --vault-password-file=<SOMEPASSWORD> 
 ```
 
 You can find links to upgrade packages [here](https://enterprise.github.com/releases)
 
+---
+### ghe-upgrade-via-pkg-no-slack.yml instructions
 
+Same as above, but without slack integration. No need to create a slack token. Just edit the inventory file then run:
+
+```
+ansible-playbook ghe-upgrade-via-pkg-no-slack.yml -i inventory/ghes --private-key /path/to/private/key -u admin -e GHES_package_url=<LINK TO UPGRADE PKG>
+```
 
 
