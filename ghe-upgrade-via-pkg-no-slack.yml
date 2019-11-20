@@ -1,0 +1,58 @@
+- name: Upgrade GHES to via pkg
+  hosts: all
+  gather_facts: no
+  strategy: linear
+
+  tasks:
+
+  - name: Put Primary in maintenance mode
+    shell: ghe-maintenance -s && ghe-maintenance -q
+    register: ghemaintstart
+    when: ('primary' in group_names)
+
+  - name: Stop replication
+    shell: ghe-repl-stop
+    ignore_errors: yes
+    when: ('replicas' in group_names)
+
+  - name: curl upgrades
+    shell: curl -L -o /tmp/ghes-upgrade.pkg {{ GHES_package_url }}
+    ignore_errors: yes
+
+  - name: run upgrades on primary
+    shell: ghe-upgrade /tmp/ghes-upgrade.pkg -y
+    ignore_errors: yes
+    ignore_unreachable: true
+    when: ('primary' in group_names)
+
+  - name: Wait for servers to restart
+    wait_for_connection:
+        timeout: 600
+
+  - pause:
+      minutes: 5
+
+  - name: run upgrades on replicas
+    shell: ghe-upgrade /tmp/ghes-upgrade.pkg -y
+    ignore_errors: yes
+    ignore_unreachable: true
+    when: ('replicas' in group_names)
+
+  - name: Wait for servers to restart
+    wait_for_connection:
+        timeout: 600
+
+  - pause:
+      minutes: 10
+
+  - name: disable maintenance
+    shell: ghe-maintenance -u && ghe-maintenance -q
+    register: ghemaintover
+    ignore_errors: yes
+    when: ('primary' in group_names)
+
+  - name: restart replication
+    shell: ghe-repl-start && ghe-repl-status
+    register: replicationstatus
+    ignore_errors: yes
+    when: ('replicas' in group_names)
